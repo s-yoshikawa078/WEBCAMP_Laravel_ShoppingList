@@ -9,8 +9,11 @@ class ShoppingList extends Model
 {
     use HasFactory;
 
-protected $casts = [
-    'created_at' => 'datetime:Y-m-d', // 日付だけ表示
-    'updated_at' => 'datetime:Y-m-d', // 必要ならこちらも
-];
+    // 一括代入可能なカラムを指定
+    protected $fillable = ['user_id', 'name'];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d', // 日付だけ表示
+        'updated_at' => 'datetime:Y-m-d', // 必要ならこちらも
+    ];
 }

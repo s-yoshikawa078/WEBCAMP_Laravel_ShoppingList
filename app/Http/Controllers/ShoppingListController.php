@@ -4,31 +4,81 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ShoppingList;
+use App\Models\CompletedShoppingList;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ShoppingListController extends Controller
 {
-    // 一覧
+    /**
+     * ログインユーザーの「買うもの」一覧を表示
+     */
     public function list()
     {
-        $shopping_lists = ShoppingList::orderBy('created_at', 'desc')->paginate(10);
-        return view('shopping_list.list', compact('shopping_lists'));
+        $user_id = Auth::id();
+
+        $shopping_lists = ShoppingList::where('user_id', $user_id)
+            ->orderBy('name', 'asc')
+            ->paginate(12);
+
+        return view('shopping_list.list', [
+            'shopping_lists' => $shopping_lists
+        ]);
     }
 
-    // 登録
+    /**
+     * 「買うもの」を登録
+     */
     public function register(Request $request)
     {
-        // バリデーション
         $request->validate([
             'name' => 'required|max:255',
         ]);
 
-        // 登録処理
-        $item = new ShoppingList();
-        $item->name = $request->name;
-        $item->user_id = auth()->id(); // ログインユーザーIDをセット
-        $item->save();
+        ShoppingList::create([
+            'user_id' => Auth::id(),
+            'name' => $request->name,
+        ]);
 
-        // 成功メッセージをセッションに入れてリダイレクト
         return redirect('/shopping_list/list')->with('success', '「買うもの」を登録しました！！');
+    }
+
+    /**
+     * 「買うもの」を削除
+     */
+    public function delete($id)
+    {
+        $item = ShoppingList::findOrFail($id);
+
+        if ($item->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $item->delete();
+
+        return redirect('/shopping_list/list')->with('success', '「買うもの」を削除しました!!');
+    }
+
+    /**
+     * 「買うもの」を完了済みに移動
+     */
+    public function complete($id)
+    {
+        $item = ShoppingList::findOrFail($id);
+
+        if ($item->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        DB::transaction(function () use ($item) {
+            CompletedShoppingList::create([
+                'user_id' => $item->user_id,
+                'name' => $item->name,
+            ]);
+
+            $item->delete();
+        });
+
+        return redirect('/shopping_list/list')->with('success', '「買うもの」を完了にしました!!');
     }
 }

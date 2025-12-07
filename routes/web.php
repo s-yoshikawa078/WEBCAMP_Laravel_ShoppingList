@@ -9,7 +9,6 @@ use App\Http\Controllers\CompletedShoppingListController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\HomeController;
 
 // ログイン前ルート
 Route::get('/', [AuthController::class, 'index'])->name('login');
@@ -24,7 +23,9 @@ Route::prefix('/user')->group(function () {
 // ログイン後ルート
 Route::middleware(['auth'])->group(function () {
     // ログイン後トップページを /shopping_list/list にする
-    Route::get('/shopping_list/list', [HomeController::class, 'index'])->name('front.top');
+    Route::get('/shopping_list/list', [ShoppingListController::class, 'list'])
+     ->middleware('auth')
+     ->name('front.list');
 
     // /top にアクセスされた場合は /shopping_list/list にリダイレクト
     Route::get('/top', function () {
@@ -47,14 +48,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
 });
 
-// 管理画面
+
 Route::prefix('/admin')->group(function () {
+
+    // ログイン画面
     Route::get('', [AdminAuthController::class, 'index'])->name('admin.index');
+
+    // ログイン処理
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login');
 
+    // 認証必須の管理画面Top
     Route::middleware(['auth:admin'])->group(function () {
-        Route::get('/top', [AdminHomeController::class, 'top'])->name('admin.top');
-        Route::get('/user/list', [AdminUserController::class, 'list'])->name('admin.user.list');
-        Route::get('/logout', [AdminAuthController::class, 'logout']);
+        Route::get('/top', function () {
+            return view('admin.top'); // resources/views/admin/top.blade.php
+        })->name('admin.top');
+
+        // ログアウト
+        Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });
 });
