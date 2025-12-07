@@ -27,7 +27,7 @@ public function login(Request $request)
 
     if (auth()->attempt($credentials)) {
         // ログイン成功
-        return redirect()->intended('/top');
+        return redirect()->intended('/shopping_list/list');
     }
 
     // ログイン失敗（英語メッセージ）
