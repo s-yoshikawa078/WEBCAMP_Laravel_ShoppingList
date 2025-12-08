@@ -43,31 +43,34 @@
         <th>「買うもの」名</th>
         <!-- 完了と削除の見出しを削除 -->
     </tr>
-    @foreach($shopping_lists as $item)
-    <tr>
-        <td>{{ \Carbon\Carbon::parse($item->created_at)->tz('Asia/Tokyo')->format('Y/m/d') }}</td>
-        <td>{{ $item->name }}</td>
+@foreach($shopping_lists as $item)
+<tr>
+    <td>{{ \Carbon\Carbon::parse($item->created_at)->tz('Asia/Tokyo')->format('Y/m/d') }}</td>
+    <td>{{ $item->name }}</td>
 
-        {{-- 完了ボタン --}}
-        <td>
-          <form action="/shopping_list/complete/{{ $item->id }}" method="POST"
-            onsubmit="return confirm('この「買うもの」を完了にします。よろしいですか？');">
-           @csrf
-            <button type="submit">完了</button>
-          </form>
-        </td>
-        
-        {{-- 削除ボタン --}}
-        <td>
-            <form action="/shopping_list/delete/{{ $item->id }}" method="POST"
-                  onsubmit="return confirm('この「買うもの」を削除します。よろしいですか？');">
-                @csrf
-                @method('DELETE')
-                <button type="submit">削除</button>
-            </form>
-        </td>
-    </tr>
-    @endforeach
+    {{-- 完了ボタン --}}
+    <td>
+      <form action="/shopping_list/complete/{{ $item->id }}" method="POST"
+        onsubmit="return confirm('この「買うもの」を完了にします。よろしいですか？');">
+       @csrf
+        <button type="submit">完了</button>
+      </form>
+    </td>
+    
+    {{-- 余白用の空のセルを挿入 --}}
+    <td style="width: 10px;"></td> 
+
+    {{-- 削除ボタン --}}
+    <td>
+        <form action="/shopping_list/delete/{{ $item->id }}" method="POST"
+              onsubmit="return confirm('この「買うもの」を削除します。よろしいですか？');">
+            @csrf
+            @method('DELETE')
+            <button type="submit">削除</button>
+        </form>
+    </td>
+</tr>
+@endforeach
 </table>
 
 {{-- ページネーション --}}
@@ -94,6 +97,8 @@
 @endif
 
 <hr style="border:1px solid black;">
-<a href="/logout">ログアウト</a>
+<div style="margin-left:1cm; margin-top:10px;">
+    <a href="/logout">ログアウト</a>
+</div>
 </body>
 </html>

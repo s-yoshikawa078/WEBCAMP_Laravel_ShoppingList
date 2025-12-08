@@ -48,6 +48,8 @@
 
     <hr style="border:1px solid black;">
 
+    <div style="margin-left:1cm; margin-top:10px;">
     <a href="/logout">ログアウト</a>
+</div>
 </body>
 </html>

@@ -7,11 +7,11 @@
 <body>
 
     <!-- ナビゲーション -->
-    <nav>
-        <a href="{{ route('admin.top') }}">管理画面Top</a><br>
-        <a href="{{ route('admin.user.list') }}">ユーザ一覧</a><br>
-        <a href="{{ route('admin.logout') }}">ログアウト</a><br>
-    </nav>
+<div style="margin-left:1cm; margin-bottom:10px;">
+    <a href="/admin/top">管理画面Top</a><br>
+    <a href="/admin/user/list">ユーザ一覧</a><br>
+    <a href="/admin/logout">ログアウト</a>
+</div>
 
     <!-- 中身 -->
     <h1>管理画面</h1>

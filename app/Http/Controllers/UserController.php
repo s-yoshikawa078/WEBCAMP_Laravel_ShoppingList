@@ -29,6 +29,6 @@ class UserController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        return redirect()->route('login')->with('success', 'ユーザ登録が完了しました！！');
+        return redirect()->route('login')->with('success', 'ユーザを登録しました！！');
     }
 }
