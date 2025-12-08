@@ -24,7 +24,7 @@
 
     <form method="POST" action="/login">
         @csrf
-        <label for="email">Email:</label>
+        <label for="email">email:</label>
         <input type="email" name="email" id="email" value="{{ old('email') }}">
         <br>
         <label for="password">パスワード:</label>
