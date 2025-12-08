@@ -46,7 +46,8 @@
         次に進む
     @endif
 
-    <hr>
+    <hr style="border:1px solid black;">
+
     <a href="/logout">ログアウト</a>
 </body>
 </html>

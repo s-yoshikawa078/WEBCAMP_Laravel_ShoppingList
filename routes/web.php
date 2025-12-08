@@ -24,8 +24,8 @@ Route::prefix('/user')->group(function () {
 Route::middleware(['auth'])->group(function () {
     // ログイン後トップページを /shopping_list/list にする
     Route::get('/shopping_list/list', [ShoppingListController::class, 'list'])
-     ->middleware('auth')
-     ->name('front.list');
+        ->middleware('auth')
+        ->name('front.list');
 
     // /top にアクセスされた場合は /shopping_list/list にリダイレクト
     Route::get('/top', function () {
@@ -36,9 +36,11 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/shopping_list')->group(function () {
         Route::post('/register', [ShoppingListController::class, 'register']);
         Route::delete('/delete/{shopping_list_id}', [ShoppingListController::class, 'delete'])
-            ->whereNumber('shopping_list_id')->name('delete');
+            ->whereNumber('shopping_list_id')
+            ->name('delete');
         Route::post('/complete/{shopping_list_id}', [ShoppingListController::class, 'complete'])
-            ->whereNumber('shopping_list_id')->name('complete');
+            ->whereNumber('shopping_list_id')
+            ->name('complete');
     });
 
     // 購入済み一覧
@@ -48,22 +50,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
 });
 
-
+// 管理画面
 Route::prefix('/admin')->group(function () {
-
-    // ログイン画面
     Route::get('', [AdminAuthController::class, 'index'])->name('admin.index');
-
-    // ログイン処理
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login');
 
-    // 認証必須の管理画面Top
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/top', function () {
-            return view('admin.top'); // resources/views/admin/top.blade.php
+            return view('admin.top');
         })->name('admin.top');
 
-        // ログアウト
+        Route::get('/user/list', [AdminUserController::class, 'index'])->name('admin.user.list');
+
         Route::get('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
     });
 });

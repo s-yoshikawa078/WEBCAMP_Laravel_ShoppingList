@@ -14,7 +14,6 @@
       </div>
     @endif
 
-
     {{-- 登録フォーム --}}
     <form method="POST" action="/shopping_list/register">
         @csrf
@@ -33,7 +32,7 @@
         </div>
     @endif
 
-    <hr>
+    {{-- 上の線は削除 --}}
 
     <h1 class="uppercase">「買うもの」一覧</h1>
     <a href="/completed_shopping_list/list">購入済み「買うもの」一覧</a>
@@ -49,7 +48,7 @@
         <td>{{ \Carbon\Carbon::parse($item->created_at)->tz('Asia/Tokyo')->format('Y/m/d') }}</td>
         <td>{{ $item->name }}</td>
 
-        {{-- 完了ボタン（余白なし） --}}
+        {{-- 完了ボタン --}}
         <td>
           <form action="/shopping_list/complete/{{ $item->id }}" method="POST"
             onsubmit="return confirm('この「買うもの」を完了にします。よろしいですか？');">
@@ -58,7 +57,6 @@
           </form>
         </td>
         
-
         {{-- 削除ボタン --}}
         <td>
             <form action="/shopping_list/delete/{{ $item->id }}" method="POST"
@@ -72,8 +70,8 @@
     @endforeach
 </table>
 
-    {{-- ページネーション --}}
-    現在 {{ $shopping_lists->currentPage() }} ページ目<br>
+{{-- ページネーション --}}
+現在 {{ $shopping_lists->currentPage() }} ページ目<br>
 
 @if ($shopping_lists->onFirstPage() === false)
     <a href="{{ $shopping_lists->url(1) }}">最初のページ</a>
@@ -95,7 +93,7 @@
     次に進む
 @endif
 
-    <hr>
-    <a href="/logout">ログアウト</a>
+<hr style="border:1px solid black;">
+<a href="/logout">ログアウト</a>
 </body>
 </html>

@@ -56,7 +56,7 @@ class ShoppingListController extends Controller
 
         $item->delete();
 
-        return redirect('/shopping_list/list')->with('success', '「買うもの」を削除しました!!');
+        return redirect('/shopping_list/list')->with('success', '「買うもの」を削除しました！！');
     }
 
     /**
@@ -79,6 +79,6 @@ class ShoppingListController extends Controller
             $item->delete();
         });
 
-        return redirect('/shopping_list/list')->with('success', '「買うもの」を完了にしました!!');
+        return redirect('/shopping_list/list')->with('success', '「買うもの」を完了にしました！！');
     }
 }
