@@ -14,6 +14,14 @@
       </div>
     @endif
 
+    @if ($errors->any())
+    <div style="color:black; margin-bottom:10px;">
+        @foreach ($errors->all() as $error)
+            {{ $error }}<br>
+        @endforeach
+    </div>
+    @endif
+
     {{-- 登録フォーム --}}
     <form method="POST" action="/shopping_list/register">
         @csrf
@@ -23,14 +31,6 @@
         <button type="submit">「買うもの」を登録する</button>
     </form>
 
-    {{-- バリデーションエラー --}}
-    @if($errors->any())
-        <div style="color:black;">
-            @foreach($errors->all() as $error)
-                {{ $error }}<br>
-            @endforeach
-        </div>
-    @endif
 
     {{-- 上の線は削除 --}}
 
