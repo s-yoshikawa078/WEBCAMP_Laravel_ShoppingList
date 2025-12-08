@@ -8,7 +8,7 @@
 <h1>ユーザ登録</h1>
 
 @if (session('success'))
-    <div style="color:green;">{{ session('success') }}</div>
+    <div style="color:black;">{{ session('success') }}</div>
 @endif
 
 @if ($errors->any())
