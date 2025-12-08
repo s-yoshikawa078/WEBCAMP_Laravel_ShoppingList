@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\RegisterUserRequest;
 
 class UserController extends Controller
 {
@@ -15,20 +15,16 @@ class UserController extends Controller
     }
 
     // 会員登録処理
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:128',
-            'email' => 'required|string|email|max:254|unique:users,email',
-            'password' => 'required|string|confirmed|max:72',
-        ]);
-
+        // $request->validated() は不要、RegisterUserRequest が自動でバリデーションを実行
         User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login')->with('success', 'ユーザを登録しました！！');
+        // 登録後はログイン画面にリダイレクト
+        return redirect()->route('login')->with('success', 'ユーザ登録が完了しました！！');
     }
 }

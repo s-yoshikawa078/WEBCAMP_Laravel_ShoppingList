@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\AdminLoginRequest;
 
 class AuthController extends Controller
 {
@@ -15,22 +16,19 @@ class AuthController extends Controller
     }
 
     // ログイン処理
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'login_id' => 'required',
-            'password' => 'required',
-        ]);
+    public function login(AdminLoginRequest $request)
+{
+    $credentials = $request->only('login_id', 'password');
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('admin.top'); // ログイン後Topにリダイレクト
-        }
-
-        return back()->withErrors([
-            'login_id' => 'ログインIDまたはパスワードが正しくありません',
-        ]);
+    if (Auth::guard('admin')->attempt($credentials)) {
+        $request->session()->regenerate();
+        return redirect()->route('admin.top'); // ログイン後Topにリダイレクト
     }
+
+    return back()->withErrors([
+        'login_id' => 'Login ID or password is incorrect.',
+    ]);
+}
 
     // ログアウト
     public function logout(Request $request)

@@ -7,6 +7,7 @@ use App\Models\ShoppingList;
 use App\Models\CompletedShoppingList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\RegisterShoppingListRequest;
 
 class ShoppingListController extends Controller
 {
@@ -29,19 +30,17 @@ class ShoppingListController extends Controller
     /**
      * 「買うもの」を登録
      */
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|max:255',
-        ]);
+    public function register(RegisterShoppingListRequest $request)
+{
+    $user_id = Auth::id();
 
-        ShoppingList::create([
-            'user_id' => Auth::id(),
-            'name' => $request->name,
-        ]);
+    \App\Models\ShoppingList::create([
+        'user_id' => $user_id,
+        'name' => $request->name,
+    ]);
 
-        return redirect('/shopping_list/list')->with('success', '「買うもの」を登録しました！！');
-    }
+    return redirect()->back()->with('success', '「買うもの」を登録しました！！');
+}
 
     /**
      * 「買うもの」を削除

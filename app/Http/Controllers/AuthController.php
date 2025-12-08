@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\UserLoginRequest; // FormRequest をインポート
 
 class AuthController extends Controller
 {
@@ -12,29 +12,23 @@ class AuthController extends Controller
         return view('auth.login'); // login.blade.php を表示
     }
 
-public function login(Request $request)
-{
-    // バリデーション（未入力時の英語メッセージ）
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ], [
-        'email.required' => 'The email field is required.',
-        'password.required' => 'The password field is required.',
-    ]);
+    // ログイン処理
+    public function login(UserLoginRequest $request) // Request ではなく UserLoginRequest に変更
+    {
+        // FormRequest でバリデーション済みなので $request->validated() は不要
+        $credentials = $request->only('email', 'password');
 
-    $credentials = $request->only('email', 'password');
+        if (auth()->attempt($credentials)) {
+            // ログイン成功
+            return redirect()->intended('/shopping_list/list');
+        }
 
-    if (auth()->attempt($credentials)) {
-        // ログイン成功
-        return redirect()->intended('/shopping_list/list');
+        // ログイン失敗（英語メッセージ）
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->withInput($request->only('email'));
     }
 
-    // ログイン失敗（英語メッセージ）
-    return back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
-    ])->withInput($request->only('email'));
-}
     // ログアウト処理
     public function logout()
     {
